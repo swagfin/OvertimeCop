@@ -1,0 +1,18 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="ui menu fluid" style="border-radius:0">
+            <a class="item">User Settings</a>
+            <a class="item">Change Password</a>
+            <a class="item">LogOut</a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="ui menu fluid" style="border-radius:0">
+            <a class="item" href="Identity/Account/Register">Register</a>
+            <a class="item" href="Identity/Account/Login">Log in</a>
+        </div>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+

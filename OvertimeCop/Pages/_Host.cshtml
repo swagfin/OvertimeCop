@@ -1,0 +1,25 @@
+﻿@page "/"
+@namespace OvertimeCop.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overtime Cop</title>
+    <script src="~/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/css/semantic.min.css" />
+    <script src="~/js/semantic.min.js"></script>
+    <link href="css/site.css" rel="stylesheet" />
+    <base href="~/" />
+</head>
+<body style="background:#f7f7f7">
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
