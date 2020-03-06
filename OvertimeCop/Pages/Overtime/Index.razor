@@ -1,18 +1,56 @@
 ﻿@page "/Overtime"
-<h3 class="ui header blue">All Recorded Overtime</h3>
+@inject OvertimeService Overtimeservice
+
+<h3 class="ui header blue">Overtime</h3>
+
+@if (allData == null)
+{
+    <LoadingSegment LoadingMessage="Retrieving Overtime Information" />
+}
+else if (allData.Count() < 1)
+{
+    <MessageSegement Header="No Records Found" MessageType="warning" Message="Oops! It looks like there are no Employees" />
+}
+else
+{
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Overtime Hrs</th>
+                <th>Holiday</th>
+                <th>Work Order #</th>
+                <th>Hourly Rate</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in allData)
+            {
+                <tr>
+                    <th>@item.Id</th>
+                    <th>
+                        @item.OvertimeHours <br />
+                        <span style="font-size:9px;color:gray;font-style:italic">@item.OvertimeStart - @item.OvertimeEnd</span>
+                    </th>
+                    <th>@item.Holiday</th>
+                    <th>@item.WorkOrderNo</th>
+                    <th>@item.HourlyRate</th>
+                    <th>@item.Reason</th>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
 
 
-<table class="ui table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Overtime Start</th>
-            <th>Overtime End</th>
-            <th>Holiday</th>
-            <th>Hourly Rate</th>
-            <th>Work Order #</th>
-            <th>Reason</th>
-            <th>Department</th>
-        </tr>
-    </thead>
-</table>
+@code{
+    IEnumerable<Overtime> allData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Await
+        allData = await Overtimeservice.GetAllAsync();
+    }
+}

@@ -1,14 +1,59 @@
 ﻿@page "/Employees"
-<h3 class="ui header blue">All Employees</h3>
+@inject EmployeeService Employeeservice
+
+<h3 class="ui header blue">Employees</h3>
+
+@if (allData == null)
+{
+    <LoadingSegment LoadingMessage="Retrieving Employees" />
+}
+else if (allData.Count() < 1)
+{
+    <MessageSegement Header="No Records Found" MessageType="warning" Message="Oops! It looks like there are no Employees" />
+}
+else
+{
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Person No</th>
+                <th>Hourly Rate</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in allData)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td>@item.PersonNo</td>
+                    <td>@item.HourlyRate</td>
+                    <td>
+                        @if (item.Department == null)
+                        {
+                            <span>No Department</span>
+                        }
+                        else
+                        {
+                            <span>@item.Department.Name</span>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
 
 
-<table class="ui table">
-    <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Person No</th>
-            <th>Hourly Rate</th>
-            <th>Department</th>
-        </tr>
-    </thead>
-</table>
+@code{
+    IEnumerable<Employee> allData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Await
+        allData = await Employeeservice.GetAllAsync();
+    }
+}

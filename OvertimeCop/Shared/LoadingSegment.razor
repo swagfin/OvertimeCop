@@ -1,0 +1,12 @@
+﻿<div class="ui segment">
+    <div class="ui active inverted dimmer">
+        <div class="ui small text loader">@LoadingMessage</div>
+    </div>
+    <p></p>
+</div>
+@code {
+
+    [Parameter]
+    public string LoadingMessage { get; set; } = "Please wait....";
+
+}

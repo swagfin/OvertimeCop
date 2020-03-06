@@ -1,12 +1,45 @@
 ﻿@page "/Departments"
-<h3 class="ui header blue">All Departments</h3>
+@inject DepartmentService Departmentservice
+
+<h3 class="ui header blue">Departments</h3>
+
+@if (allData == null)
+{
+    <LoadingSegment LoadingMessage="Retrieving Departments" />
+}
+else if (allData.Count() < 1)
+{
+    <MessageSegement Header="No Records Found" MessageType="warning" Message="Oops! It looks like there are no Departments." />
+}
+else
+{
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in allData)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
 
 
-<table class="ui table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Department</th>
-        </tr>
-    </thead>
-</table>
+@code{
+    IEnumerable<Department> allData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Await
+        allData = await Departmentservice.GetAllAsync();
+    }
+}

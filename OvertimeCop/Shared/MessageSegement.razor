@@ -1,0 +1,27 @@
+﻿@if (IsVisiable)
+{
+    <div class="ui icon message @MessageType">
+        <i class="close icon" onclick="CloseMessage"></i>
+        <i class="inbox icon"></i>
+        <div class="content">
+            <div class="header">
+                @Header
+            </div>
+            <p>@Message</p>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public string MessageType { get; set; } = string.Empty;
+    [Parameter]
+    public string Header { get; set; } = string.Empty;
+    [Parameter]
+    public string Message { get; set; } = string.Empty;
+
+    private bool IsVisiable = true;
+    void CloseMessage()
+    {
+        IsVisiable = false;
+    }
+}

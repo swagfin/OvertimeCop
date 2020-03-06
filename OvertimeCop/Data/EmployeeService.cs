@@ -34,7 +34,7 @@ namespace OvertimeCop.Data
 
         public Employee GetById(int EmployeeNo)
         {
-            return Db.Employees.FirstOrDefault(x => x.PersonNo == EmployeeNo);
+            return Db.Employees.Include(x => x.Department).FirstOrDefault(x => x.PersonNo == EmployeeNo);
         }
 
         public Task<Employee> GetByIdAsync(int EmployeeNo)
@@ -47,7 +47,7 @@ namespace OvertimeCop.Data
 
         public IEnumerable<Employee> GetAll()
         {
-            return Db.Employees.AsNoTracking().ToList();
+            return Db.Employees.Include(x => x.Department).AsNoTracking().ToList();
         }
 
         public Task<IEnumerable<Employee>> GetAllAsync()
