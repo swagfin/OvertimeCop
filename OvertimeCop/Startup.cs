@@ -39,7 +39,9 @@ namespace OvertimeCop
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<DepartmentService>();
+            services.AddScoped<EmployeeService>();
+            services.AddScoped<OvertimeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

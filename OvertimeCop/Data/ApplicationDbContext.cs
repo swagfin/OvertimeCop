@@ -12,5 +12,10 @@ namespace OvertimeCop.Data
             : base(options)
         {
         }
+
+
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Overtime> Overtimes { get; set; }
     }
 }
