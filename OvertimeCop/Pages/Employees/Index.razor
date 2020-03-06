@@ -1,11 +1,16 @@
 ﻿@page "/Employees"
 @inject EmployeeService Employeeservice
+@inject NavigationManager nav
 
 <h3 class="ui header blue">Employees</h3>
 
+<a class="ui button small primary" href="/Employees/Add"><i class="add icon"></i>Add Employee</a>
+
+
+
 @if (allData == null)
 {
-    <LoadingSegment LoadingMessage="Retrieving Employees" />
+    <LoadingSegment LoadingTitle="Retrieving Employees" />
 }
 else if (allData.Count() < 1)
 {
@@ -13,13 +18,14 @@ else if (allData.Count() < 1)
 }
 else
 {
-    <table class="ui table">
+    <table class="ui table striped">
         <thead>
             <tr>
                 <th>Full Name</th>
                 <th>Person No</th>
                 <th>Hourly Rate</th>
                 <th>Department</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +45,7 @@ else
                             <span>@item.Department.Name</span>
                         }
                     </td>
-
+                    <td><a class="ui small label blue" href="/Employees/Edit/@item.Id">View</a></td>
                 </tr>
             }
         </tbody>

@@ -32,16 +32,16 @@ namespace OvertimeCop.Data
         }
 
 
-        public Employee GetById(int EmployeeNo)
+        public Employee GetById(int EmployeeId)
         {
-            return Db.Employees.Include(x => x.Department).FirstOrDefault(x => x.PersonNo == EmployeeNo);
+            return Db.Employees.Include(x => x.Department).FirstOrDefault(x => x.Id == EmployeeId);
         }
 
-        public Task<Employee> GetByIdAsync(int EmployeeNo)
+        public Task<Employee> GetByIdAsync(int EmployeeId)
         {
             return Task.Run(() =>
              {
-                 return GetById(EmployeeNo);
+                 return GetById(EmployeeId);
              });
         }
 
@@ -58,17 +58,17 @@ namespace OvertimeCop.Data
              });
         }
 
-        public void Remove(int EmployeeNo)
+        public void Remove(int EmployeeId)
         {
-            var employee = GetById(EmployeeNo);
+            var employee = GetById(EmployeeId);
             Db.Employees.Remove(employee);
         }
 
-        public Task RemoveAsync(int EmployeeNo)
+        public Task RemoveAsync(int EmployeeId)
         {
             return Task.Run(() =>
              {
-                 Remove(EmployeeNo);
+                 Remove(EmployeeId);
              });
         }
 

@@ -1,0 +1,182 @@
+﻿@page "/Overtime/Edit/{Id:int}"
+@inject EmployeeService employeeService
+@inject OvertimeService overtimeService
+@inject NavigationManager nav
+
+<h3>Add Employee</h3>
+
+<EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
+    @if (IsLoading)
+    {
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Just a sec....</div>
+        </div>
+    }
+
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="field">
+        <label>Employee</label>
+        <select @bind="@model.EmployeeId">
+            <option selected="selected" value="@selectedEmployee.Id">@selectedEmployee.FullName</option>
+        </select>
+        <ValidationMessage For="@(()=>model.EmployeeId)" />
+    </div>
+
+
+
+    @if (selectedEmployee != null)
+    {
+        <div class="two fields">
+            <div class="field">
+                <label>Overtime Start</label>
+                <InputDate @bind-Value="@model.OvertimeStart" />
+                <ValidationMessage For="@(()=>model.OvertimeStart)" />
+            </div>
+            <div class="field">
+                <label>Overtime End</label>
+                <InputDate @bind-Value="@model.OvertimeEnd" />
+                <ValidationMessage For="@(()=>model.OvertimeEnd)" />
+            </div>
+
+        </div>
+
+        <div class="field">
+            <label for="Holiday">Holiday</label>
+            <InputCheckbox @bind-Value="@model.Holiday" id="Holiday" />
+            <ValidationMessage For="@(()=>model.Holiday)" />
+        </div>
+
+
+        if (model.OvertimeHours < 1)
+        {
+            <MessageSegement Header="No Overtime Hours" MessageType="negative" Message="No Overtime Hours to Record an Overtime Start and Overtime End Period" MessageIcon="frown icon" />
+        }
+        else
+        {
+            CalculateOverTime();
+
+            <div class="ui horizontal divider">
+                OVERTIME
+            </div>
+            <table class="ui table striped attached">
+                <thead><tr><th>Calculation</th> <th>Total</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><b>Total Overtime Hours:</b></td>
+                        <td style="color:green"><b>@string.Format("{0:N2} Hrs", model.OvertimeHours)</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>Employee Overtime Rate:</b></td>
+                        <td style="color:green"><b>@string.Format("{0:N2} per Hour", selectedEmployee.HourlyRate)</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>Total:</b><span style="font-size:9px;color:gray;font-style: italic">(Hrs @model.OvertimeHours x @selectedEmployee.HourlyRate)</span></td>
+                        <td style="color:darkred"><b>@string.Format("${0:N2}", (model.OvertimeHours * selectedEmployee.HourlyRate))</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>Holiday</b></td>
+                        <td style="color:green">
+                            <b>
+                                @OverTimeRate
+                            </b>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>TOTAL</b></td>
+                        <td style="color:red"><b>@string.Format("${0:N2}", model.TotalAmount)</b></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="ui divider"></div>
+            <div class="field">
+                <label>Work Order No #</label>
+                <InputText @bind-Value="@model.WorkOrderNo" placeholder="Work Order #" />
+                <ValidationMessage For="@(()=>model.WorkOrderNo)" />
+            </div>
+            <div class="field">
+                <label>Overtime Reason </label>
+                <InputTextArea @bind-Value="@model.Reason" placeholder="Overtime Reason" />
+                <ValidationMessage For="@(()=>model.Reason)" />
+            </div>
+            <p align="center">
+                <button class="ui button positive @(IsLoading ? " loading" : "" )" type="submit">Update @selectedEmployee.FullName Overtime</button>
+            </p>
+
+        }
+
+
+
+    }
+
+
+</EditForm>
+
+@code{
+
+    [Parameter]
+    public int Id { get; set; }
+    private Overtime model { get; set; } = new Overtime();
+    private Employee selectedEmployee { get; set; } = new Employee();
+    private bool IsLoading { get; set; } = false;
+    //OverTime
+    private string OverTimeRate { get; set; }
+    public IEnumerable<Employee>    allEmployees { get; set; }
+    //Propert
+    protected override async Task OnInitializedAsync()
+    {
+        //Get Model By Id
+        model = await overtimeService.GetByIdAsync(Id);
+        if (model == null)
+            nav.NavigateTo("/Overtime");
+        //Assign Selected Objec
+        selectedEmployee = model.Employee;
+    }
+
+
+    private void SelectEmployee(Employee employee)
+    {
+        if (employee == null)
+            return;
+        selectedEmployee = employee;
+    }
+
+    private void CalculateOverTime()
+    {
+        //Fedback
+        if (selectedEmployee == null)
+            return;
+        //Hourly
+        model.HourlyRate = selectedEmployee.HourlyRate;
+        if (selectedEmployee.Department != null)
+        {
+            model.Department = selectedEmployee.Department.Name;
+        }
+        //Calculate Total
+        if (model.Holiday)
+        {
+            OverTimeRate = "200%";
+            model.TotalAmount = (model.OvertimeHours * selectedEmployee.HourlyRate) * 2;
+
+        }
+        else
+        {
+            OverTimeRate = "150%";
+            model.TotalAmount = (model.OvertimeHours * selectedEmployee.HourlyRate) * 1.5;
+        }
+    }
+
+    async void Save()
+    {
+        CalculateOverTime();
+        IsLoading = true;
+        await overtimeService.UpdateAsync(model);
+        nav.NavigateTo("/Overtime");
+    }
+
+}

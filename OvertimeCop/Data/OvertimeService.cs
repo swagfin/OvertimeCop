@@ -34,7 +34,7 @@ namespace OvertimeCop.Data
 
         public Overtime GetById(int OvertimeNo)
         {
-            return Db.Overtimes.FirstOrDefault(x => x.Id == OvertimeNo);
+            return Db.Overtimes.Include(x => x.Employee.Department).FirstOrDefault(x => x.Id == OvertimeNo);
         }
 
         public Task<Overtime> GetByIdAsync(int OvertimeNo)

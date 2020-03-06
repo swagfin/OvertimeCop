@@ -1,12 +1,17 @@
-﻿<div class="ui segment">
-    <div class="ui active inverted dimmer">
-        <div class="ui small text loader">@LoadingMessage</div>
+﻿<div class="ui icon message positive">
+    <i class="notched circle loading icon"></i>
+    <div class="content">
+        <div class="header">
+            @LoadingTitle
+        </div>
+        <p>@LoadingMessage</p>
     </div>
-    <p></p>
 </div>
 @code {
 
     [Parameter]
-    public string LoadingMessage { get; set; } = "Please wait....";
+    public string LoadingTitle { get; set; } = "Just one second";
+    [Parameter]
+    public string LoadingMessage { get; set; } = "We're fetching that content for you.";
 
 }

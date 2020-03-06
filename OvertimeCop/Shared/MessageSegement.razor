@@ -1,13 +1,20 @@
 ﻿@if (IsVisiable)
 {
     <div class="ui icon message @MessageType">
-        <i class="close icon" onclick="CloseMessage"></i>
-        <i class="inbox icon"></i>
+        <i class="close icon" @onclick="CloseMessage"></i>
+        <i class="@MessageIcon icon"></i>
         <div class="content">
             <div class="header">
                 @Header
             </div>
             <p>@Message</p>
+            @if (!string.IsNullOrEmpty(ActionLabel))
+            {
+                <p align="center">
+                    <div @onclick="ActionClicked.InvokeAsync" class="ui positive button">@ActionLabel</div>
+                </p>
+            }
+
         </div>
     </div>
 }
@@ -18,8 +25,20 @@
     public string Header { get; set; } = string.Empty;
     [Parameter]
     public string Message { get; set; } = string.Empty;
+    [Parameter]
+    public string MessageIcon { get; set; } = "info";
+    [Parameter]
+    public string ActionLabel { get; set; } = null;
+    [Parameter]
+    public EventCallback ActionClicked { get; set; }
 
-    private bool IsVisiable = true;
+    private bool IsVisiable { get; set; } = true;
+
+    protected override void OnInitialized()
+    {
+        IsVisiable = true;
+    }
+
     void CloseMessage()
     {
         IsVisiable = false;

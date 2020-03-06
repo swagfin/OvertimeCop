@@ -1,0 +1,39 @@
+﻿@page "/Departments/Add"
+@inject DepartmentService departmentService
+@inject NavigationManager nav
+
+<h3>Add Department</h3>
+
+<EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
+    @if (IsLoading)
+    {
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Saving information. Just a sec....</div>
+        </div>
+    }
+
+    <DataAnnotationsValidator />
+
+    <div class="field">
+        <label>Department Name</label>
+        <InputText @bind-Value="@model.Name" />
+        <ValidationMessage For="@(()=>model.Name)" />
+    </div>
+    <p align="center">
+        <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Save Department</button>
+    </p>
+</EditForm>
+
+@code {
+
+    private Department model { get; set; } = new Department();
+    private bool IsLoading { get; set; } = false;
+
+    async void Save()
+    {
+        IsLoading = true;
+        await departmentService.AddAsync(model);
+        nav.NavigateTo("/Departments");
+    }
+
+}

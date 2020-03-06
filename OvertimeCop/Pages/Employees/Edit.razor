@@ -1,0 +1,81 @@
+﻿@page "/Employees/Edit/{Id:int}"
+@inject EmployeeService employeeService
+@inject DepartmentService departmentService
+@inject NavigationManager nav
+
+<h3 class="ui header blue">Edit Employee Details</h3>
+
+<EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
+    @if (IsLoading)
+    {
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Updating information. Just a sec....</div>
+        </div>
+    }
+
+
+    <DataAnnotationsValidator />
+    <div class="field">
+        <label>Full Name</label>
+        <InputText @bind-Value="@model.FullName" />
+        <ValidationMessage For="@(()=>model.FullName)" />
+    </div>
+    <div class="field">
+        <label>Person No</label>
+        <InputText @bind-Value="@model.PersonNo" />
+        <ValidationMessage For="@(()=>model.PersonNo)" />
+    </div>
+    <div class="field">
+        <label>Hourly Rate</label>
+        <InputNumber @bind-Value="@model.HourlyRate" />
+        <ValidationMessage For="@(()=>model.HourlyRate)" />
+    </div>
+
+    <div class="field">
+        <label>Department</label>
+        <select @bind="@model.DepartmentId">
+            @if (allDepartments != null)
+            {
+                foreach (var item in allDepartments)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+        <ValidationMessage For="@(()=>model.DepartmentId)" />
+    </div>
+     <p align="center">
+    <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Update Employee</button>
+         </p>
+</EditForm>
+
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+    private Employee model { get; set; } = new Employee();
+    private bool IsLoading { get; set; } = false;
+    public IEnumerable<Department> allDepartments { get; set; }
+
+
+    async void Save()
+    {
+        IsLoading = true;
+        await employeeService.UpdateAsync(model);
+        nav.NavigateTo("/Employees");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Get Model By Id
+        model = await employeeService.GetByIdAsync(Id);
+        if (model == null)
+            nav.NavigateTo("/Employees");
+        //Load Model
+        allDepartments = await departmentService.GetAllAsync();
+    }
+
+
+
+}

@@ -1,0 +1,73 @@
+﻿@page "/Employees/Add"
+@inject DepartmentService departmentService
+@inject EmployeeService employeeService
+@inject NavigationManager nav
+
+<h3>Add Employee</h3>
+
+<EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
+    @if (IsLoading)
+    {
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Saving information. Just a sec....</div>
+        </div>
+    }
+
+    <DataAnnotationsValidator />
+
+
+    <div class="field">
+        <label>Full Name</label>
+        <InputText @bind-Value="@model.FullName" />
+        <ValidationMessage For="@(()=>model.FullName)" />
+    </div>
+    <div class="field">
+        <label>Person No</label>
+        <InputText @bind-Value="@model.PersonNo" />
+        <ValidationMessage For="@(()=>model.PersonNo)" />
+    </div>
+    <div class="field">
+        <label>Hourly Rate</label>
+        <InputNumber @bind-Value="@model.HourlyRate" />
+        <ValidationMessage For="@(()=>model.HourlyRate)" />
+    </div>
+
+    <div class="field">
+        <label>Department</label>
+        <select @bind="@model.DepartmentId">
+            @if (allDepartments != null)
+            {
+                foreach (var item in allDepartments)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+        <ValidationMessage For="@(()=>model.DepartmentId)" />
+    </div>
+     <p align="center">
+
+    <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Save Employee</button>
+     </p>
+</EditForm>
+
+@code {
+
+    private Employee model { get; set; } = new Employee();
+    private bool IsLoading { get; set; } = false;
+    public IEnumerable<Department> allDepartments { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        allDepartments = await departmentService.GetAllAsync();
+    }
+
+
+    async void Save()
+    {
+        IsLoading = true;
+        await employeeService.AddAsync(model);
+        nav.NavigateTo("/Employees");
+    }
+
+}

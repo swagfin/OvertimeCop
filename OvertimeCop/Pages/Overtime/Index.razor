@@ -2,14 +2,15 @@
 @inject OvertimeService Overtimeservice
 
 <h3 class="ui header blue">Overtime</h3>
+<a class="ui button small primary" href="/Overtime/Record"><i class="add icon"></i>Record Overtime</a>
 
 @if (allData == null)
 {
-    <LoadingSegment LoadingMessage="Retrieving Overtime Information" />
+    <LoadingSegment LoadingTitle="Retrieving Overtime Information" />
 }
 else if (allData.Count() < 1)
 {
-    <MessageSegement Header="No Records Found" MessageType="warning" Message="Oops! It looks like there are no Employees" />
+    <MessageSegement Header="No Records Found" MessageType="warning" Message="Oops! It looks like there are no Overtime Recorded yet" />
 }
 else
 {
@@ -21,7 +22,8 @@ else
                 <th>Holiday</th>
                 <th>Work Order #</th>
                 <th>Hourly Rate</th>
-                <th>Reason</th>
+                <th>Total Amount</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +38,8 @@ else
                     <th>@item.Holiday</th>
                     <th>@item.WorkOrderNo</th>
                     <th>@item.HourlyRate</th>
-                    <th>@item.Reason</th>
+                    <th>@item.TotalAmount</th>
+                    <td><a class="ui small label blue" href="/Overtime/Edit/@item.Id">View</a></td>
                 </tr>
             }
         </tbody>
