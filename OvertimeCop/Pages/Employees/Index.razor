@@ -1,6 +1,7 @@
 ﻿@page "/Employees"
 @inject EmployeeService Employeeservice
-@inject NavigationManager nav
+
+
 
 <h3 class="ui header blue">Employees</h3>
 
@@ -45,7 +46,10 @@ else
                             <span>@item.Department.Name</span>
                         }
                     </td>
-                    <td><a class="ui small label blue" href="/Employees/Edit/@item.Id">View</a></td>
+                    <td>
+                        <a class="ui small label blue" href="/Employees/Edit/@item.Id">View</a>
+                        <div class="ui small label orange" style="cursor:pointer" @onclick="(()=>ConfirmDelete(item.Id))">Delete</div>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -62,4 +66,25 @@ else
         //Await
         allData = await Employeeservice.GetAllAsync();
     }
+
+    private async void ConfirmDelete(int Id)
+    {
+        try
+        {
+            bool jsConfirmed = await js.InvokeAsync<bool>
+                ("confirm", "Are you sure you want to Delete this Record ??");
+            if (jsConfirmed)
+            {
+                await Employeeservice.RemoveAsync(Id);
+                allData = await Employeeservice.GetAllAsync();
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            await js.InvokeVoidAsync("alert", "An Error Occurred while deleting this Record");
+        }
+
+    }
+
 }

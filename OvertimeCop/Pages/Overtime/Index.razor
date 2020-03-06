@@ -20,7 +20,7 @@ else
                 <th>Id</th>
                 <th>Overtime Hrs</th>
                 <th>Holiday</th>
-                <th>Work Order #</th>
+                <th>Work Order</th>
                 <th>Hourly Rate</th>
                 <th>Total Amount</th>
                 <th></th>
@@ -30,16 +30,19 @@ else
             @foreach (var item in allData)
             {
                 <tr>
-                    <th>@item.Id</th>
-                    <th>
+                    <td>@item.Id</td>
+                    <td>
                         @item.OvertimeHours <br />
-                        <span style="font-size:9px;color:gray;font-style:italic">@item.OvertimeStart - @item.OvertimeEnd</span>
-                    </th>
-                    <th>@item.Holiday</th>
-                    <th>@item.WorkOrderNo</th>
-                    <th>@item.HourlyRate</th>
-                    <th>@item.TotalAmount</th>
-                    <td><a class="ui small label blue" href="/Overtime/Edit/@item.Id">View</a></td>
+                        <span style="font-size:9px;color:gray;">@item.OvertimeStart - @item.OvertimeEnd</span>
+                    </td>
+                    <td>@item.Holiday</td>
+                    <td>@item.WorkOrderNo</td>
+                    <td>@item.HourlyRate</td>
+                    <td style="color:green;font-weight:bold">@string.Format("${0:N2}",item.TotalAmount)</td>
+                    <td>
+                        <a class="ui small label blue" href="/Overtime/Edit/@item.Id">View</a>
+                        <div class="ui small label orange" style="cursor:pointer" @onclick="(()=>ConfirmDelete(item.Id))">Delete</div>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -56,4 +59,24 @@ else
         //Await
         allData = await Overtimeservice.GetAllAsync();
     }
+
+    private async void ConfirmDelete(int departmentId)
+    {
+        try
+        {
+            bool jsConfirmed = await js.InvokeAsync<bool>("confirm", "Are you sure you want to Delete this Record ??");
+            if (jsConfirmed)
+            {
+                await Overtimeservice.RemoveAsync(departmentId);
+                allData = await Overtimeservice.GetAllAsync();
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            await js.InvokeVoidAsync("alert", "An Error Occurred while deleting this Record");
+        }
+
+    }
+
 }

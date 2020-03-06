@@ -62,6 +62,7 @@ namespace OvertimeCop.Data
         {
             var department = GetById(DepartmentNo);
             Db.Departments.Remove(department);
+            Db.SaveChanges();
         }
 
         public Task RemoveAsync(int DepartmentNo)
