@@ -61,6 +61,15 @@ namespace OvertimeCop.Data
         public void Remove(int DepartmentNo)
         {
             var department = GetById(DepartmentNo);
+            if (department == null)
+                return;
+            //Get All Employees Assigned to Group
+            var all_assigned = Db.Employees.Where(x => x.Department.Id == department.Id).ToList();
+            //UnAssign
+            if (all_assigned != null)
+                foreach (Employee em in all_assigned)
+                    em.DepartmentId = null;
+            //Finnaly Remove
             Db.Departments.Remove(department);
             Db.SaveChanges();
         }

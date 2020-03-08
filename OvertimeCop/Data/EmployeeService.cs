@@ -62,6 +62,7 @@ namespace OvertimeCop.Data
         {
             var employee = GetById(EmployeeId);
             Db.Employees.Remove(employee);
+            Db.SaveChanges();
         }
 
         public Task RemoveAsync(int EmployeeId)
