@@ -1,7 +1,6 @@
 ﻿@page "/Departments/Add"
 @inject DepartmentService departmentService
-@inject NavigationManager nav
-
+@attribute [Authorize]
 <h3>Add Department</h3>
 
 <EditForm OnValidSubmit="Save" Model="model" class="ui form segment">

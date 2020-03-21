@@ -12,8 +12,10 @@ namespace OvertimeCop
         [Required]
         public int EmployeeId { get; set; }
         [Required]
+        [DataType(DataType.DateTime)]
         public DateTime OvertimeStart { get; set; } = DateTime.Now;
         [Required]
+        [DataType(DataType.DateTime)]
         public DateTime OvertimeEnd { get; set; } = DateTime.Now;
         [Required]
         public bool Holiday { get; set; } = false;

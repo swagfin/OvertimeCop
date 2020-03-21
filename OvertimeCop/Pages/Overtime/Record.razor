@@ -1,8 +1,7 @@
 ﻿@page "/Overtime/Record"
 @inject EmployeeService employeeService
 @inject OvertimeService overtimeService
-@inject NavigationManager nav
-
+@attribute [Authorize]
 <h3>Add Employee</h3>
 
 <EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
@@ -40,22 +39,17 @@
         <div class="two fields">
             <div class="field">
                 <label>Overtime Start</label>
-                <InputDate @bind-Value="@model.OvertimeStart" />
+                <InputText @bind-Value="@FormatedDateStart" />
                 <ValidationMessage For="@(()=>model.OvertimeStart)" />
             </div>
             <div class="field">
                 <label>Overtime End</label>
-                <InputDate @bind-Value="@model.OvertimeEnd" />
+                <InputText @bind-Value="@FormatedDateEnd" />
                 <ValidationMessage For="@(()=>model.OvertimeEnd)" />
             </div>
 
         </div>
 
-        <div class="field">
-            <label for="Holiday">Holiday</label>
-            <InputCheckbox @bind-Value="@model.Holiday" id="Holiday" />
-            <ValidationMessage For="@(()=>model.Holiday)" />
-        </div>
 
 
         if (model.OvertimeHours < 1)
@@ -66,9 +60,18 @@
         {
             CalculateOverTime();
 
+
+
             <div class="ui horizontal divider">
                 OVERTIME
             </div>
+
+            <div class="field">
+                <label for="Holiday">Holiday</label>
+                <InputCheckbox @bind-Value="@model.Holiday" id="Holiday" />
+                <ValidationMessage For="@(()=>model.Holiday)" />
+            </div>
+
             <table class="ui table striped attached">
                 <thead><tr><th>Calculation</th> <th>Total</th></tr></thead>
                 <tbody>
@@ -112,10 +115,10 @@
                 <InputTextArea @bind-Value="@model.Reason" placeholder="Overtime Reason" />
                 <ValidationMessage For="@(()=>model.Reason)" />
             </div>
-     <p align="center">
-            <button class="ui button positive @(IsLoading ? " loading" : "" )" type="submit">Record @selectedEmployee.FullName Overtime</button>
+            <p align="center">
+                <button class="ui button positive @(IsLoading ? " loading" : "" )" type="submit">Record @selectedEmployee.FullName Overtime</button>
 
-         </p>
+            </p>
         }
 
 
@@ -130,6 +133,21 @@
     private Overtime model { get; set; } = new Overtime();
     private Employee selectedEmployee { get; set; }
     private bool IsLoading { get; set; } = false;
+    private string FormatedDateStart
+    {
+        get
+        {
+            return model.OvertimeStart.ToString();
+        }
+        set
+        {
+            DateTime dateTime = model.OvertimeStart;
+            DateTime.TryParse(value, out dateTime);
+            model.OvertimeStart = dateTime;
+            StateHasChanged();
+        }
+    }
+    private string FormatedDateEnd { get; set; } = DateTime.Now.ToString();
     //OverTime
     private string OverTimeRate { get; set; }
     public IEnumerable<Employee>
@@ -161,7 +179,7 @@
             return;
         //Hourly
         model.HourlyRate = selectedEmployee.HourlyRate;
-        model.Department = selectedEmployee.Department.Name ?? string.Empty;
+        model.Department = selectedEmployee.Department != null ? selectedEmployee.Department.Name : string.Empty;
         //Calculate Total
         if (model.Holiday)
         {

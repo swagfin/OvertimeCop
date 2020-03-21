@@ -1,7 +1,6 @@
 ﻿@page "/Departments/Edit/{Id:int}"
 @inject DepartmentService departmentService
-@inject NavigationManager nav
-
+@attribute [Authorize]
 <h3 class="ui header blue">Edit Department Details</h3>
 <EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
     @if (IsLoading)
@@ -18,9 +17,9 @@
         <InputText @bind-Value="@model.Name" />
         <ValidationMessage For="@(()=>model.Name)" />
     </div>
-     <p align="center">
-    <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Update Department</button>
-     </p>
+    <p align="center">
+        <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Update Department</button>
+    </p>
 </EditForm>
 @code
 {
@@ -40,7 +39,7 @@
     {
         //Get Model By Id
         model = await departmentService.GetByIdAsync(Id);
-        if (model==null)
+        if (model == null)
             nav.NavigateTo("/Departments");
     }
 

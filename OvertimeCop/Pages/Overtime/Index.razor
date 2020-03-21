@@ -1,6 +1,6 @@
 ﻿@page "/Overtime"
 @inject OvertimeService Overtimeservice
-
+@attribute [Authorize]
 <h3 class="ui header blue">Overtime</h3>
 <a class="ui button small primary" href="/Overtime/Record"><i class="add icon"></i>Record Overtime</a>
 
@@ -38,7 +38,7 @@ else
                     <td>@item.Holiday</td>
                     <td>@item.WorkOrderNo</td>
                     <td>@item.HourlyRate</td>
-                    <td style="color:green;font-weight:bold">@string.Format("${0:N2}",item.TotalAmount)</td>
+                    <td style="color:green;font-weight:bold">@string.Format("${0:N2}", item.TotalAmount)</td>
                     <td>
                         <a class="ui small label blue" href="/Overtime/Edit/@item.Id">View</a>
                         <div class="ui small label orange" style="cursor:pointer" @onclick="(()=>ConfirmDelete(item.Id))">Delete</div>

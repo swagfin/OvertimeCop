@@ -1,0 +1,19 @@
+﻿<h3 class="ui header blue">Access Denied</h3>
+<div class="ui placeholder segment">
+    <p><a>Access Denied to access this Page</a>. Login with a High level access account</p>
+
+    <div class="ui text container center aligned">
+        <button href="Identity/Account/Login" class="ui button primary @loading" @onclick="GoToLogin">Go to Login</button>
+    </div>
+</div>
+
+@code{
+    @inject NavigationManager nav
+    private string loading { get; set; } = string.Empty;
+    public void GoToLogin()
+    {
+        loading = "loading";
+        string navigationNew = string.Format("{0}{1}?ReturnUrl=/{2}", nav.BaseUri, "Identity/Account/Login", nav.ToBaseRelativePath(nav.Uri));
+        nav.NavigateTo(navigationNew, true);
+    }
+}

@@ -1,8 +1,7 @@
 ﻿@page "/Overtime/Edit/{Id:int}"
 @inject EmployeeService employeeService
 @inject OvertimeService overtimeService
-@inject NavigationManager nav
-
+@attribute [Authorize]
 <h3>Add Employee</h3>
 
 <EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
@@ -126,7 +125,7 @@
     private bool IsLoading { get; set; } = false;
     //OverTime
     private string OverTimeRate { get; set; }
-    public IEnumerable<Employee>    allEmployees { get; set; }
+    public IEnumerable<Employee> allEmployees { get; set; }
     //Propert
     protected override async Task OnInitializedAsync()
     {

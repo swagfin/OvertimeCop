@@ -1,8 +1,7 @@
 ﻿@page "/Employees/Edit/{Id:int}"
 @inject EmployeeService employeeService
 @inject DepartmentService departmentService
-@inject NavigationManager nav
-
+@attribute [Authorize]
 <h3 class="ui header blue">Edit Employee Details</h3>
 
 <EditForm OnValidSubmit="Save" Model="model" class="ui form segment">
@@ -44,9 +43,9 @@
         </select>
         <ValidationMessage For="@(()=>model.DepartmentId)" />
     </div>
-     <p align="center">
-    <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Update Employee</button>
-         </p>
+    <p align="center">
+        <button class="ui button positive @(IsLoading ? "loading" : "")" type="submit">Update Employee</button>
+    </p>
 </EditForm>
 
 
